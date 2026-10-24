@@ -1,6 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4YDQZNC97W"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag("js", new Date());
+  gtag("config", "G-4YDQZNC97W");
+</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Srikanth Sridhar · Making the enterprise agent-ready</title>
@@ -535,6 +543,34 @@
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // Track engagement events
+  document.addEventListener("DOMContentLoaded", () => {
+    // LinkedIn outbound clicks
+    document.querySelectorAll("a[href*=\"linkedin.com\"]").forEach(link => {
+      link.addEventListener("click", () => {
+        if (typeof gtag === "function") {
+          gtag("event", "click_linkedin", {
+            event_category: "outbound_engagement",
+            event_label: link.href
+          });
+        }
+      });
+    });
+
+    // In-page CTA and navigation clicks
+    document.querySelectorAll(".cta a, .hero .btn, nav a").forEach(link => {
+      link.addEventListener("click", () => {
+        if (typeof gtag === "function") {
+          gtag("event", "click_cta", {
+            event_category: "engagement",
+            event_label: (link.textContent || "").trim(),
+            link_url: link.getAttribute("href")
+          });
+        }
+      });
+    });
+  });
 </script>
 </body>
 </html>
